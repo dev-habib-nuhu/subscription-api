@@ -7,6 +7,7 @@ class Subscription(db.Model):
     """Subscription Model for managing a user subscriptions"""
 
     __tablename__ = "subscriptions"
+    
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, nullable=False)
     plan_id = Column(Integer, nullable=False)

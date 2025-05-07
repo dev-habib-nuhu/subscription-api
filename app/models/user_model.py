@@ -1,11 +1,10 @@
 from sqlalchemy import Boolean, Column, Index, Integer, String, DateTime
-from app.extensions import db
 from werkzeug.security import generate_password_hash, check_password_hash
+from app.extensions import db
 
 
 class User(db.Model):
     """User Model to save user details"""
-
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
@@ -25,7 +24,7 @@ class User(db.Model):
     def check_password(self, passwrd):
         return check_password_hash(self.pass_hash, passwrd)
 
-    __table_args__ = Index("ix_users_email", email)
+    __table_args__ = (Index("ix_users_email", "email"),)
 
     def __repr__(self):
         return f"<User {self.username}>"
