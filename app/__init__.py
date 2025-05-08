@@ -16,9 +16,9 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     jwt.init_app(app)
 
-    app.register_blueprint(user_blueprint, url_prefix=f"/api/{API_VERSION}/user")
+    app.register_blueprint(user_blueprint, url_prefix=f"/api/{API_VERSION}/users")
     app.register_blueprint(
-        subscription_blueprint, url_prefix=f"/api/{API_VERSION}/subscription"
+        subscription_blueprint, url_prefix=f"/api/{API_VERSION}/subscriptions"
     )
-    app.register_blueprint(plan_blueprint, url_prefix=f"/api/{API_VERSION}/plan")
+    app.register_blueprint(plan_blueprint, url_prefix=f"/api/{API_VERSION}/plans")
     return app
