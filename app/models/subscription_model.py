@@ -1,5 +1,5 @@
 from datetime import timedelta
-from sqlalchemy import Boolean, Column, Index, Integer, DateTime
+from sqlalchemy import Boolean, Column, ForeignKey, Index, Integer, DateTime
 from app.extensions import db
 
 
@@ -7,10 +7,10 @@ class Subscription(db.Model):
     """Subscription Model for managing a user subscriptions"""
 
     __tablename__ = "subscriptions"
-    
+
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, nullable=False)
-    plan_id = Column(Integer, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    plan_id = Column(Integer, ForeignKey("plans.id"), nullable=False)
     auto_renew = Column(Boolean, default=True)
     start_date = Column(DateTime, server_default=db.func.now(), nullable=False)
     end_date = Column(DateTime, nullable=False)
@@ -29,5 +29,8 @@ class Subscription(db.Model):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        if not self.end_date:
+        if not self.end_date and self.plan:
             self.end_date = self.start_date + timedelta(days=self.plan.duration_in_days)
+
+    def __repr__(self):
+        return f"<Subscription {self.user_id} - {self.plan_id}>"
