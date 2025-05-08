@@ -9,7 +9,7 @@ def success_response(data=None, status=200, message="success"):
 
 def error_response(message="error", status=400, errors=None):
     response = {
-        "statuse": "error",
+        "status": "error",
         "message": message,
         "errors": errors if errors else [],
     }
