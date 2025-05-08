@@ -73,9 +73,8 @@ class SubscriptionService:
             cursor=cursor,
             limit=limit,
             cursor_field="created_at",
-            order_by="DESC"
+            order_by="DESC",
         )
-
 
     @staticmethod
     def cancel_subscription(subscription_id: int):
