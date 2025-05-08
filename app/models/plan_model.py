@@ -2,10 +2,10 @@ from sqlalchemy import Boolean, Column, Integer, String, DateTime
 from app.extensions import db
 
 
-class SubscriptionPlan(db.Model):
+class Plan(db.Model):
     """Subscription Plan model holds the details of subscription plans"""
 
-    __tablename__ = "subscription_plans"
+    __tablename__ = "plans"
 
     id = Column(Integer, primary_key=True)
     name = Column(String(50), unique=True, nullable=False)
@@ -18,9 +18,7 @@ class SubscriptionPlan(db.Model):
         DateTime, nullable=False, server_default=db.func.now(), onupdate=db.func.now()
     )
 
-    subscriptions = db.relationship(
-        "Subscription", backref="subscription_plan", lazy="dynamic"
-    )
+    subscriptions = db.relationship("Subscription", backref="plan", lazy="dynamic")
 
     def __repr__(self):
-        return f"<SubscriptionPlan {self.name}>"
+        return f"<Plan {self.name}>"
