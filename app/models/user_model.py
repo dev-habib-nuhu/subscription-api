@@ -5,6 +5,7 @@ from app.extensions import db
 
 class User(db.Model):
     """User Model to save user details"""
+
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
