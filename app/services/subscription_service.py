@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from app.extensions import db
 from app.models.subscription_model import Subscription
 from app.models.plan_model import Plan
@@ -26,7 +26,7 @@ class SubscriptionService:
         plan = Plan.query.get(plan_id)
         if not plan or not plan.is_active:
             raise ValueError("Invalid or inactive subscription plan")
-        start_date = datetime.utcnow()
+        start_date = datetime.now(timezone.utc)
         end_date = start_date + timedelta(days=plan.duration_in_days)
 
         subscription = Subscription(
