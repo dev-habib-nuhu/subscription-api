@@ -25,7 +25,10 @@ class User(db.Model):
     def check_password(self, passwrd):
         return check_password_hash(self.pass_hash, passwrd)
 
-    __table_args__ = (Index("ix_users_email", "email"),)
+    __table_args__ = (
+        Index("ix_users_email", "email"),
+        Index("ix_users_username", "username"),
+    )
 
     def __repr__(self):
         return f"<User {self.username}>"
