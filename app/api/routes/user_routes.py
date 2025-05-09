@@ -10,6 +10,7 @@ user_blueprint = Blueprint("user", __name__)
 
 @user_blueprint.route("/signup", methods=["POST"])
 def create_account():
+    """Create a new user account"""
     data = request.get_json()
     if not data:
         return error_response("Invalid request", 400)
