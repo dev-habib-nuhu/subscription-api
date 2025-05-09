@@ -100,8 +100,8 @@ This outlines all available API endpoints, including the HTTP method, endpoint p
 > ```
 > Authorization: Bearer <access_token>
 > ```
-
-### 🔐 Authentication
+````
+### Authentication
 
 #### Register User
 - **Method:** POST  
