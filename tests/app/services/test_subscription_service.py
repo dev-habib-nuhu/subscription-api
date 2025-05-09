@@ -1,3 +1,5 @@
+import time
+from datetime import datetime, timezone, timedelta
 import pytest
 from unittest.mock import ANY, patch, MagicMock
 from app.services.subscription_service import SubscriptionService
@@ -9,11 +11,16 @@ from app.extensions import db
 
 @pytest.fixture
 def app():
-    """Create test Flask app with DB"""
+    """Create test Flask app with DB and create tables"""
     app = Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
     db.init_app(app)
+
+    with app.app_context():
+        db.create_all()
+
     return app
 
 
@@ -153,3 +160,44 @@ def test_get_active_subscriptions(app):
             assert result == mock_result
 
 
+def test_fetch_subscriptions_performance(app):
+    """Performance test for _fetch_subscriptions"""
+    with app.app_context():
+        user_id = "test_user"
+
+        # Insert dummy data
+        now = datetime.now(timezone.utc)
+        with db.session.begin():
+            plan = Plan(
+                id=1,
+                name="Test Plan",
+                description="Test description",
+                price=0,
+                duration_in_days=30,
+                is_active=True,
+            )
+            db.session.add(plan)
+            for i in range(10000):
+                sub = Subscription(
+                    user_id=user_id,
+                    plan_id=1,
+                    start_date=now,
+                    end_date=now + timedelta(days=30),
+                    is_active=True,
+                    auto_renew=True,
+                    created_at=now + timedelta(seconds=i),
+                )
+                db.session.add(sub)
+
+        start_time = time.perf_counter()
+
+        result = SubscriptionService._fetch_subscriptions(
+            user_id=user_id,
+            limit=100,
+            cursor_field="created_at",
+        )
+
+        duration = time.perf_counter() - start_time
+
+        assert duration < 0.5, f"Query took too long: {duration}s"
+        assert len(result["data"]) == 100
