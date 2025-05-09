@@ -13,13 +13,13 @@
 
 ## Setup
 
-### 1. Prerequisites
+###  Prerequisites
 
 - Python 3.9+
 - pipenv (recommended) or pip
 - SQLite (default) or PostgreSQL
 
-### 2. Installation
+### Installation
 
 ```bash
 # Clone the repository
@@ -38,7 +38,7 @@ source venv/bin/activate  # Linux/Mac
 pip install -r requirements.txt
 ```
 
-### 3. Configuration
+### Configuration
 
 Create `.env` file:
 ```bash
@@ -54,7 +54,7 @@ SECRET_KEY=your-secret-key-here
 JWT_SECRET_KEY=your-jwt-secret-here
 ```
 
-### 4. Database Setup
+### Database Setup
 
 ```bash
 # Initialize database
@@ -73,7 +73,8 @@ flask seed
 ```bash
 flask run
 ```
-=>> API will be available at `http://localhost:5000`
+
+API will be available at `http://localhost:5000`
 
 
 ## Testing
