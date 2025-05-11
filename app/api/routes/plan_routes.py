@@ -1,9 +1,10 @@
 from loguru import logger
 from flask import Blueprint, request
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services.plan_service import PlanService
 from app.utils.response import error_response, success_response
 from app.schemas import plan_list_schema, plan_schema
+from marshmallow import ValidationError
 
 
 plan_blueprint = Blueprint("plan", __name__)
@@ -38,17 +39,26 @@ def get_plan(plan_id):
 def create_plan():
     """Create a plan"""
     try:
+        user_id = get_jwt_identity()
+
         data = request.get_json()
-        errors = plan_schema.validate(data)
-        if errors:
-            return error_response(errors, 400)
+        if not data:
+            return error_response("No input data provided", 400)
+
+        try:
+            validated_data = plan_schema.load(data)
+        except ValidationError as err:
+            return error_response(str(err.messages), 400)
 
         plan = PlanService.create_plan(
-            name=data["name"],
-            description=data.get("description"),
-            price=data["price"],
+            name=validated_data["name"],
+            description=validated_data.get("description"),
+            price=validated_data["price"],
+            duration_in_days=validated_data["duration_in_days"],
         )
         return success_response(plan_schema.dump(plan), 201)
+    except ValidationError as err:
+        return error_response(str(err.messages), 400)
     except Exception as ex:
         logger.exception(f"Failed to create plan on error {ex}")
         return error_response("Internal server error", 500)

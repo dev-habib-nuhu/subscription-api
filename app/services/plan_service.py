@@ -4,9 +4,14 @@ from app.models.plan_model import Plan
 
 class PlanService:
     @staticmethod
-    def create_plan(name: str, description: str, price: float):
+    def create_plan(name: str, description: str, price: float, duration_in_days: int):
         """Add plan to the db"""
-        plan = Plan(name=name, description=description, price=price)
+        plan = Plan(
+            name=name,
+            description=description,
+            price=price,
+            duration_in_days=duration_in_days,
+        )
         db.session.add(plan)
         db.session.commit()
         return plan
