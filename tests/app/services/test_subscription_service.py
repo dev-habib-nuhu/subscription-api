@@ -1,35 +1,10 @@
 import time
 from datetime import datetime, timezone, timedelta
-import pytest
 from unittest.mock import ANY, patch, MagicMock
 from app.services.subscription_service import SubscriptionService
 from app.models.subscription_model import Subscription
 from app.models.plan_model import Plan
-from flask import Flask
 from app.extensions import db
-
-
-@pytest.fixture
-def app():
-    """Create test Flask app with DB and create tables"""
-    app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-    db.init_app(app)
-
-    with app.app_context():
-        db.create_all()
-
-    return app
-
-
-@pytest.fixture
-def client(app):
-    """Test client with app context"""
-    with app.test_client() as client:
-        with app.app_context():
-            yield client
 
 
 def test_create_subscription(app, client):
